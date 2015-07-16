@@ -18,10 +18,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
+import com.google.gson.Gson;
 
 import org.joda.time.DateTime;
 
-import java.text.SimpleDateFormat;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class FormularioTratamiento extends ActionBarActivity {
 
@@ -59,9 +62,8 @@ public class FormularioTratamiento extends ActionBarActivity {
     }
 
     public void fechaInicio(View view){
-        Toast.makeText(this,"hola", Toast.LENGTH_LONG).show();
         FragmentManager fm = getSupportFragmentManager();
-        final DateTime now = DateTime.now();
+        DateTime now = DateTime.now();
         CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog
                 .newInstance(new CalendarDatePickerDialog.OnDateSetListener() {
                                  @Override
@@ -86,6 +88,7 @@ public class FormularioTratamiento extends ActionBarActivity {
                                      TextView tv = (TextView) findViewById(R.id.fechaFinal);
                                      String fecha = dia + "/" + mes + "/" + year;
                                      tv.setText(fecha);
+                                     t.setFechaFinal(fecha);
                                  }
                              }, now.getYear(), now.getMonthOfYear() - 1,
                         now.getDayOfMonth());
@@ -131,8 +134,8 @@ public class FormularioTratamiento extends ActionBarActivity {
 
                             Toast.makeText(contexto, "Se ha creado un medicamento", Toast.LENGTH_LONG).show();
 
-
                             mostrarEnPantalla(m);
+                            t.añadirMedicamento(m);
                             FormularioMedicamento.dismiss();
                         }
                     }
@@ -182,6 +185,25 @@ public class FormularioTratamiento extends ActionBarActivity {
     }
 
     public void guardarTratamiento(View view){
+        Gson gson = new Gson();
+        String json = gson.toJson(t);
+        BufferedWriter bw = null;
+        Toast.makeText(this, "" + getApplicationContext().getFilesDir(), Toast.LENGTH_LONG).show();
+        try {
+             bw = new BufferedWriter(new FileWriter( getApplicationContext().getFilesDir() + "ejemplo.json"));
+            bw.write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally{
+            if(bw != null){
+                try {
+                    bw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
+        }
+        Toast.makeText(this, json, Toast.LENGTH_LONG).show();
     }
 }

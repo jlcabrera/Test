@@ -16,7 +16,7 @@ public class Tratamiento{
     private String nombreDelTratamiento;
     private String fechaInicio;
     private String fechaFinal;
-    private ArrayList<Medicamento> listaMedicamentos;
+    private ArrayList<Medicamento> listaMedicamentos = new ArrayList<Medicamento>();
 
     //constructor por parametros de los tratamientos
     public Tratamiento(String nombre, String inicio, String fin){
