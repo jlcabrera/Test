@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,21 +24,48 @@ import com.google.gson.Gson;
 
 import org.joda.time.DateTime;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FormularioTratamiento extends ActionBarActivity {
 
 
     final Context contexto = this;
     private Tratamiento t = new Tratamiento();
+    private List<Tratamiento> listaTratamientos = new ArrayList<Tratamiento>();
+    private File directorio = new File(Environment.getExternalStorageDirectory(), "json");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_tratamiento);
-
+        if(!directorio.exists()){
+            directorio.mkdir();
+        }else{
+            Gson gson = new Gson();
+            BufferedReader br = null;
+            try {
+                br = new BufferedReader(new FileReader(directorio + "/ejemplo.json"));
+                listaTratamientos = gson.fromJson(br, ArrayList.class);
+            } catch (FileNotFoundException e) {
+                Log.e("Error al leer el json","Han ocurrido errores mientras se creaba la lista de tratamientos");
+            }finally {
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -185,12 +214,12 @@ public class FormularioTratamiento extends ActionBarActivity {
     }
 
     public void guardarTratamiento(View view){
+        listaTratamientos.add(t);
         Gson gson = new Gson();
-        String json = gson.toJson(t);
+        String json = gson.toJson(listaTratamientos);
         BufferedWriter bw = null;
-        Toast.makeText(this, "" + getApplicationContext().getFilesDir(), Toast.LENGTH_LONG).show();
         try {
-             bw = new BufferedWriter(new FileWriter( getApplicationContext().getFilesDir() + "ejemplo.json"));
+            bw = new BufferedWriter(new FileWriter(new File(directorio,"ejemplo.json")));
             bw.write(json);
         } catch (IOException e) {
             e.printStackTrace();
@@ -204,6 +233,6 @@ public class FormularioTratamiento extends ActionBarActivity {
             }
 
         }
-        Toast.makeText(this, json, Toast.LENGTH_LONG).show();
+        finish();
     }
 }
