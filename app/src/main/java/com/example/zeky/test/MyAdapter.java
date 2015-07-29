@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MyAdapter extends ArrayAdapter {
 
@@ -17,34 +18,34 @@ public class MyAdapter extends ArrayAdapter {
 
     // Constructor de Adaptador
     public MyAdapter(Context c, ArrayList<Tratamiento> lista){
-        super(c, R.layout.fila_medicamento, lista);
+        super(c, R.layout.fila_tratamiento, lista);
         this.context = c;
         this.lista = lista;
     }
 
     // Clase privada para el viewHolder(adapter mas óptimo)
     static class ViewHolder{
-        TextView Medicamentos;
+        TextView tratamientos;
     }
 
     // Metodo donde sacaremos la información necesaria para crear la lista
     public View getView(int position, View convertView, ViewGroup parent){
 
-        Medicamento m = (Medicamento) getItem(position);
+        Tratamiento t = getItem(position);
         ViewHolder viewHolder;
 
         if(convertView == null) {
             //Medicamentos m = this.lista.get(position);
             LayoutInflater inflater = LayoutInflater.from(this.context);
-            convertView = inflater.inflate(R.layout.fila_medicamento, parent,false);
+            convertView = inflater.inflate(R.layout.fila_tratamiento, parent,false);
             viewHolder = new ViewHolder();
-            viewHolder.Medicamentos = (TextView) convertView.findViewById(R.id.nMedicamento);
+            viewHolder.tratamientos = (TextView) convertView.findViewById(R.id.nTratamiento);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder)convertView.getTag();
 
         }
-        viewHolder.Medicamentos.setText(m.toString());
+        viewHolder.tratamientos.setText(t.toString());
 
 
         return convertView;
@@ -54,7 +55,7 @@ public class MyAdapter extends ArrayAdapter {
         return this.lista.size();
     }
 
-   public Object getItem(int arg0){
+   public Tratamiento getItem(int arg0){
        return lista.get(arg0);
    }
 

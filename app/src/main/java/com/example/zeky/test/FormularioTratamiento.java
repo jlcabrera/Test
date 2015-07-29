@@ -36,7 +36,6 @@ import java.util.List;
 
 public class FormularioTratamiento extends ActionBarActivity {
 
-
     final Context contexto = this;
     private Tratamiento t = new Tratamiento();
     private List<Tratamiento> listaTratamientos = new ArrayList<Tratamiento>();
