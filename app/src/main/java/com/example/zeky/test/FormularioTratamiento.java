@@ -232,8 +232,9 @@ public class FormularioTratamiento extends ActionBarActivity {
                     e.printStackTrace();
                 }
             }
-
         }
         finish();
     }
+
+    //esto es una prueba de como se realiza el push pull
 }
