@@ -213,6 +213,8 @@ public class FormularioTratamiento extends ActionBarActivity {
     }
 
     public void guardarTratamiento(View view){
+        EditText et = (EditText) findViewById(R.id.nombreTratamiento);
+        t.setNombreDelTratamiento(et.getText().toString());
         listaTratamientos.add(t);
         Gson gson = new Gson();
         String json = gson.toJson(listaTratamientos);

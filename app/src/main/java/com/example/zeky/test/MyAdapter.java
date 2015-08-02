@@ -35,7 +35,6 @@ public class MyAdapter extends ArrayAdapter {
         ViewHolder viewHolder;
 
         if(convertView == null) {
-            //Medicamentos m = this.lista.get(position);
             LayoutInflater inflater = LayoutInflater.from(this.context);
             convertView = inflater.inflate(R.layout.fila_tratamiento, parent,false);
             viewHolder = new ViewHolder();
@@ -45,7 +44,7 @@ public class MyAdapter extends ArrayAdapter {
             viewHolder = (ViewHolder)convertView.getTag();
 
         }
-        viewHolder.tratamientos.setText(t.toString());
+        viewHolder.tratamientos.setText(t.getNombreDelTratamiento());
 
 
         return convertView;
