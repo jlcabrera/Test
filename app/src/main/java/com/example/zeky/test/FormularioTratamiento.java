@@ -232,8 +232,9 @@ public class FormularioTratamiento extends ActionBarActivity {
                     e.printStackTrace();
                 }
             }
-
         }
         finish();
     }
+
+    //asldkfjasñlkdfjasñlkdfj
 }
