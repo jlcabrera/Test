@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -17,17 +19,21 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     private static final int ACTIVITY_OK = 1;
+    private ArrayList<Tratamiento> listaTratamient = new ArrayList<Tratamiento>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ArrayList<Tratamiento> listaTratamient = new ArrayList<>();
         File directorio = new File(Environment.getExternalStorageDirectory(), "json");
         if(!directorio.exists()){
             directorio.mkdir();
@@ -56,6 +61,34 @@ public class MainActivity extends AppCompatActivity {
 
                 ListView lv = (ListView) findViewById(R.id.listaTratamientos);
                 lv.setAdapter(new MyAdapter(this, listaTratamient));
+                lv.setOnItemClickListener(this);
+                lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        listaTratamient.remove(position);
+
+                        File directorio = new File(Environment.getExternalStorageDirectory(), "json");
+                        Gson gson = new Gson();
+                        String json = gson.toJson(listaTratamient);
+                        BufferedWriter bw = null;
+                        try {
+                            bw = new BufferedWriter(new FileWriter(new File(directorio,"ejemplo.json")));
+                            bw.write(json);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }finally{
+                            if(bw != null){
+                                try {
+                                    bw.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        onResume();
+                        return false;
+                    }
+                });
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -93,6 +126,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //implementar una vista para los tratamientos, que diga los medicamentos que hay en ese tramtamiento, la hora a la que toca la siguiente toma
+        //y las tomas restantes de cada medicamento
 
     }
 }

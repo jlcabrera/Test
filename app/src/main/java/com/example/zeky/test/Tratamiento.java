@@ -3,6 +3,7 @@ package com.example.zeky.test;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -14,12 +15,12 @@ public class Tratamiento{
     // Atributos de la clase tratamiento
 
     private String nombreDelTratamiento;
-    private String fechaInicio;
-    private String fechaFinal;
+    private Date fechaInicio;
+    private Date fechaFinal;
     private ArrayList<Medicamento> listaMedicamentos = new ArrayList<Medicamento>();
 
     //constructor por parametros de los tratamientos
-    public Tratamiento(String nombre, String inicio, String fin){
+    public Tratamiento(String nombre, Date inicio, Date fin){
 
         this.nombreDelTratamiento = nombre;
         this.fechaInicio = inicio;
@@ -39,19 +40,20 @@ public class Tratamiento{
     }
 
 
-    public String getFechaInicio() {
+    public Date getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(String fechaInicio) {
+    public void setFechaInicio(Date fechaInicio) {
+
         this.fechaInicio = fechaInicio;
     }
 
-    public String getFechaFinal() {
+    public Date getFechaFinal() {
         return fechaFinal;
     }
 
-    public void setFechaFinal(String fechaFinal) {
+    public void setFechaFinal(Date fechaFinal) {
         this.fechaFinal = fechaFinal;
     }
 

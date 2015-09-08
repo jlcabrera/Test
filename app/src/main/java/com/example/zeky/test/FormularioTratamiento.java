@@ -23,6 +23,7 @@ import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDi
 import com.google.gson.Gson;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -31,7 +32,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class FormularioTratamiento extends ActionBarActivity {
@@ -97,9 +102,10 @@ public class FormularioTratamiento extends ActionBarActivity {
                                  @Override
                                  public void onDateSet(CalendarDatePickerDialog calendarDatePickerDialog, int year, int mes, int dia) {
                                      TextView tv = (TextView) findViewById(R.id.fechaInicio);
-                                     String fecha = dia + "/" + mes + "/" + year;
-                                     tv.setText(fecha);
-                                     t.setFechaInicio(fecha);
+                                     Calendar fecha = new GregorianCalendar(year, mes, dia);
+                                     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                                     tv.setText(format.format(fecha.getTime()));
+                                     t.setFechaInicio(fecha.getTime());
                                  }
                              }, now.getYear(), now.getMonthOfYear() - 1,
                         now.getDayOfMonth());
@@ -114,9 +120,10 @@ public class FormularioTratamiento extends ActionBarActivity {
                                  @Override
                                  public void onDateSet(CalendarDatePickerDialog calendarDatePickerDialog, int year, int mes, int dia) {
                                      TextView tv = (TextView) findViewById(R.id.fechaFinal);
-                                     String fecha = dia + "/" + mes + "/" + year;
-                                     tv.setText(fecha);
-                                     t.setFechaFinal(fecha);
+                                     Calendar fecha = new GregorianCalendar(year, mes, dia);
+                                     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                                     tv.setText(format.format(fecha.getTime()));
+                                     t.setFechaFinal(fecha.getTime());
                                  }
                              }, now.getYear(), now.getMonthOfYear() - 1,
                         now.getDayOfMonth());
@@ -155,7 +162,7 @@ public class FormularioTratamiento extends ActionBarActivity {
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(comprobarDatos(nombreMedicament, cantidad, vecesAlDia)) {
+                        if(comprobarDatosMedicamento(nombreMedicament, cantidad, vecesAlDia)) {
                             m.setnMedicamento(nombreMedicament.getText().toString());
                             m.setMiligramos(Integer.valueOf(cantidad.getText().toString()));
                             m.setTomas(Integer.valueOf(vecesAlDia.getText().toString()));
@@ -173,7 +180,7 @@ public class FormularioTratamiento extends ActionBarActivity {
         FormularioMedicamento.show();
     }
 
-    public boolean comprobarDatos(EditText nombreMedicament, EditText cantidad, EditText vecesAlDia){
+    public boolean comprobarDatosMedicamento(EditText nombreMedicament, EditText cantidad, EditText vecesAlDia){
         boolean validos = true;
         if(vecesAlDia.getText().toString().length() == 0) {
             vecesAlDia.setError("El dato es requerido");
@@ -213,26 +220,43 @@ public class FormularioTratamiento extends ActionBarActivity {
     }
 
     public void guardarTratamiento(View view){
-        EditText et = (EditText) findViewById(R.id.nombreTratamiento);
-        t.setNombreDelTratamiento(et.getText().toString());
-        listaTratamientos.add(t);
-        Gson gson = new Gson();
-        String json = gson.toJson(listaTratamientos);
-        BufferedWriter bw = null;
-        try {
-            bw = new BufferedWriter(new FileWriter(new File(directorio,"ejemplo.json")));
-            bw.write(json);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally{
-            if(bw != null){
-                try {
-                    bw.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+        if(comprobarDatosFormulario()) {
+            EditText et = (EditText) findViewById(R.id.nombreTratamiento);
+            t.setNombreDelTratamiento(et.getText().toString());
+            listaTratamientos.add(t);
+            Gson gson = new Gson();
+            String json = gson.toJson(listaTratamientos);
+            BufferedWriter bw = null;
+            try {
+                bw = new BufferedWriter(new FileWriter(new File(directorio, "ejemplo.json")));
+                bw.write(json);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (bw != null) {
+                    try {
+                        bw.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+            finish();
         }
-        finish();
+    }
+
+    public boolean comprobarDatosFormulario(){
+        if(t.getFechaFinal() != null && t.getFechaInicio() != null) {
+            int diferncia = Days.daysBetween(new DateTime(t.getFechaInicio()), new DateTime(t.getFechaFinal())).getDays();
+            if(diferncia > 0){
+                return true;
+            }else{
+                Toast.makeText(this,"La fecha de fin no puede ser anterior a la fecha de incio",Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }else{
+            Toast.makeText(this, "No se puede guardar un tratamientos sin las fechas de inicio y fin", Toast.LENGTH_LONG).show();
+            return false;
+        }
     }
 }
