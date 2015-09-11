@@ -166,6 +166,9 @@ public class FormularioTratamiento extends ActionBarActivity {
                             m.setnMedicamento(nombreMedicament.getText().toString());
                             m.setMiligramos(Integer.valueOf(cantidad.getText().toString()));
                             m.setTomas(Integer.valueOf(vecesAlDia.getText().toString()));
+                            if(comprobarDatosFormulario()){
+                                m.calcularTotalTomas(obtenerDias());
+                            }
 
                             Toast.makeText(contexto, "Se ha creado un medicamento", Toast.LENGTH_LONG).show();
 
@@ -247,7 +250,7 @@ public class FormularioTratamiento extends ActionBarActivity {
 
     public boolean comprobarDatosFormulario(){
         if(t.getFechaFinal() != null && t.getFechaInicio() != null) {
-            int diferncia = Days.daysBetween(new DateTime(t.getFechaInicio()), new DateTime(t.getFechaFinal())).getDays();
+            int diferncia = obtenerDias();
             if(diferncia > 0){
                 return true;
             }else{
@@ -258,5 +261,9 @@ public class FormularioTratamiento extends ActionBarActivity {
             Toast.makeText(this, "No se puede guardar un tratamientos sin las fechas de inicio y fin", Toast.LENGTH_LONG).show();
             return false;
         }
+    }
+
+    public int obtenerDias(){
+        return Days.daysBetween(new DateTime(t.getFechaInicio()), new DateTime(t.getFechaFinal())).getDays();
     }
 }

@@ -16,13 +16,13 @@ public class Medicamento extends BroadcastReceiver{
     private int miligramos;
     private int vecesAlDia;
     private int tomas;
+    private int totalTomas;
     private int ALARM_REQUEST_CODE = 1;
 
     public Medicamento(String nM, int mg, int veces){
         this.nMedicamento = nM;
         this.miligramos = mg;
         this.vecesAlDia = veces;
-
     }
 
     public Medicamento(){
@@ -53,9 +53,15 @@ public class Medicamento extends BroadcastReceiver{
         return this.tomas;
     }
 
+    public int getTotalTomas(){
+        return this.totalTomas;
+    }
+
     //metodo para calcular la cantidad total de tomas
-    private void calcularTotalTomas(int dias){
-        this.tomas = this.vecesAlDia * dias;
+
+    public void calcularTotalTomas(int dias){
+        this.totalTomas = this.vecesAlDia * dias;
+        this.tomas = totalTomas;
     }
 
     //horas que pasan entre toma y toma

@@ -1,6 +1,5 @@
 package com.example.zeky.test;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -9,11 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -27,7 +23,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
@@ -132,6 +127,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //implementar una vista para los tratamientos, que diga los medicamentos que hay en ese tramtamiento, la hora a la que toca la siguiente toma
         //y las tomas restantes de cada medicamento
+        Intent i = new Intent(this, VistaMedicamento.class);
+        Tratamiento t = (Tratamiento)parent.getItemAtPosition(position);
+        i.putExtra("lista", t.getListaMedicamentos());
+        i.putExtra("nombreTratamiento", t.getNombreDelTratamiento());
+        startActivity(i);
 
     }
 }

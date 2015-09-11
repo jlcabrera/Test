@@ -15,14 +15,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MyAdapter extends ArrayAdapter {
+public class MedicamentAdapter extends ArrayAdapter {
 
     private final Context context;
-    private final ArrayList<Tratamiento> lista;
+    private final ArrayList<Medicamento> lista;
 
 
     // Constructor de Adaptador
-    public MyAdapter(Context c, ArrayList<Tratamiento> lista){
+    public MedicamentAdapter(Context c, ArrayList<Medicamento> lista){
         super(c, R.layout.fila_tratamiento, lista);
         this.context = c;
         this.lista = lista;
@@ -30,35 +30,34 @@ public class MyAdapter extends ArrayAdapter {
 
     // Clase privada para el viewHolder(adapter mas óptimo)
     static class ViewHolder{
-        TextView tratamientos;
-        TextView fechaInicio;
-        TextView fechaFinal;
-        TextView diasRestantes;
+        TextView medicamento;
+        TextView tomasTotales;
+        TextView tomasRestantes;
+        TextView siguienteToma;
     }
 
     // Metodo donde sacaremos la información necesaria para crear la lista
     public View getView(int position, View convertView, ViewGroup parent){
 
-        Tratamiento t = getItem(position);
+        Medicamento m = getItem(position);
         ViewHolder viewHolder;
 
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(this.context);
             convertView = inflater.inflate(R.layout.fila_tratamiento, parent,false);
             viewHolder = new ViewHolder();
-            viewHolder.tratamientos = (TextView) convertView.findViewById(R.id.nTratamiento);
-            viewHolder.fechaInicio = (TextView) convertView.findViewById(R.id.tvFechaInicio);
-            viewHolder.fechaFinal = (TextView) convertView.findViewById(R.id.tvFechaFinal);
-            viewHolder.diasRestantes = (TextView) convertView.findViewById(R.id.tvRestantes);
+            viewHolder.medicamento = (TextView) convertView.findViewById(R.id.nTratamiento);
+            viewHolder.tomasTotales = (TextView) convertView.findViewById(R.id.tvFechaInicio);
+            viewHolder.tomasRestantes = (TextView) convertView.findViewById(R.id.tvFechaFinal);
+            viewHolder.siguienteToma = (TextView) convertView.findViewById(R.id.tvRestantes);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder)convertView.getTag();
         }
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        viewHolder.tratamientos.setText(t.getNombreDelTratamiento());
-        viewHolder.fechaInicio.setText("Fecha de inicio: " + format.format(t.getFechaInicio()));
-        viewHolder.fechaFinal.setText("Fecha de fin: " + format.format(t.getFechaFinal()));
-        viewHolder.diasRestantes.setText(String.valueOf("Dias restantes: " + calcularDiasRestantes(t.getFechaFinal())));
+        viewHolder.medicamento.setText(m.getnMedicamento());
+        viewHolder.tomasTotales.setText("Total tomas: " + m.getTotalTomas());
+        viewHolder.tomasRestantes.setText("Tomas restantes: " + m.getTomas());
+        //viewHolder.siguienteToma.setText(String.valueOf("Dias restantes: " + calcularDiasRestantes(t.getFechaFinal())));
 
         return convertView;
     }
@@ -67,7 +66,7 @@ public class MyAdapter extends ArrayAdapter {
         return this.lista.size();
     }
 
-    public Tratamiento getItem(int arg0){
+    public Medicamento getItem(int arg0){
        return lista.get(arg0);
    }
 

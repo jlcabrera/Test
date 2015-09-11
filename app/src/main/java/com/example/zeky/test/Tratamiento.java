@@ -1,9 +1,5 @@
 package com.example.zeky.test;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -47,6 +43,10 @@ public class Tratamiento{
     public void setFechaInicio(Date fechaInicio) {
 
         this.fechaInicio = fechaInicio;
+    }
+
+    public ArrayList<Medicamento> getListaMedicamentos(){
+        return this.listaMedicamentos;
     }
 
     public Date getFechaFinal() {
