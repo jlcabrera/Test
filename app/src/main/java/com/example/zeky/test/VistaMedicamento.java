@@ -1,6 +1,5 @@
 package com.example.zeky.test;
 
-import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -22,7 +21,7 @@ public class VistaMedicamento extends ActionBarActivity {
 
         TextView tratamiento = (TextView) findViewById(R.id.tvNombreTratamiento);
         tratamiento.setText("Medicamentos del tratamiento " + datos.getString("nombreTratamiento"));
-        ArrayList<Medicamento> medicamentList = (ArrayList<Medicamento>) savedInstanceState.get("lista");
+        ArrayList<Medicamento> medicamentList = datos.getParcelableArrayList("lista");
 
         ListView listaMedicamentos = (ListView)findViewById(R.id.lvMedicamentos);
         listaMedicamentos.setAdapter(new MedicamentAdapter(this, medicamentList));

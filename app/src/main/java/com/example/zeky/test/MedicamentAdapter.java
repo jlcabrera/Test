@@ -57,7 +57,11 @@ public class MedicamentAdapter extends ArrayAdapter {
         viewHolder.medicamento.setText(m.getnMedicamento());
         viewHolder.tomasTotales.setText("Total tomas: " + m.getTotalTomas());
         viewHolder.tomasRestantes.setText("Tomas restantes: " + m.getTomas());
-        //viewHolder.siguienteToma.setText(String.valueOf("Dias restantes: " + calcularDiasRestantes(t.getFechaFinal())));
+
+        Date fecha = new Date(m.getSiguienteHora());
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+
+        viewHolder.siguienteToma.setText(String.valueOf("Siguiente Toma: " + format.format(fecha)));
 
         return convertView;
     }
@@ -74,16 +78,16 @@ public class MedicamentAdapter extends ArrayAdapter {
        return position;
    }
 
-    public int calcularDiasRestantes(Date fechaFinal){
-        Date hoy = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-        String date = format.format(hoy);
-        Date today = null;
-        try {
-             today = format.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return Days.daysBetween(new DateTime(today), new DateTime(fechaFinal)).getDays();
-    }
+    //public int calcularDiasRestantes(Date fechaFinal){
+    //    Date hoy = new Date();
+    //    SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+    //    String date = format.format(hoy);
+    //    Date today = null;
+    //    try {
+    //         today = format.parse(date);
+    //    } catch (ParseException e) {
+    //        e.printStackTrace();
+    //    }
+    //    return Days.daysBetween(new DateTime(today), new DateTime(fechaFinal)).getDays();
+    //}
 }

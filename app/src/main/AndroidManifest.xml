@@ -22,8 +22,8 @@
         <activity android:name=".FormularioTratamiento" >
         </activity>
         <activity
-            android:name=".VistaTratamiento"
-            android:label="@string/title_activity_vista_tratamiento" >
+            android:name=".VistaMedicamento"
+            android:label="Medicament Recorder">
         </activity>
     </application>
 

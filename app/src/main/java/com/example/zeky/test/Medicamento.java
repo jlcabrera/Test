@@ -5,19 +5,39 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.widget.Toast;
 
 /**
  * Created by Zeky on 19/3/15.
  */
-public class Medicamento extends BroadcastReceiver{
+public class Medicamento extends BroadcastReceiver implements Parcelable{
     //atributos
     private String nMedicamento;
     private int miligramos;
     private int vecesAlDia;
     private int tomas;
     private int totalTomas;
+    private long siguienteHora;
     private int ALARM_REQUEST_CODE = 1;
+
+    public static final Parcelable.Creator<Medicamento> CREATOR = new ClassLoaderCreator<Medicamento>() {
+        @Override
+        public Medicamento createFromParcel(Parcel source) {
+            return null;
+        }
+
+        @Override
+        public Medicamento[] newArray(int size) {
+            return new Medicamento[size];
+        }
+
+        @Override
+        public Medicamento createFromParcel(Parcel source, ClassLoader loader) {
+            return new Medicamento(source);
+        }
+    };
 
     public Medicamento(String nM, int mg, int veces){
         this.nMedicamento = nM;
@@ -26,6 +46,13 @@ public class Medicamento extends BroadcastReceiver{
     }
 
     public Medicamento(){
+    }
+
+    public Medicamento(Parcel source) {
+        this.nMedicamento = source.readString();
+        this.tomas = source.readInt();
+        this.totalTomas = source.readInt();
+        this.siguienteHora = source.readLong();
     }
 
     //metodos getter y setter
@@ -57,11 +84,19 @@ public class Medicamento extends BroadcastReceiver{
         return this.totalTomas;
     }
 
+    public void setVecesAlDia(int vecesAlDia){
+        this.vecesAlDia = vecesAlDia;
+    }
+
+    public long getSiguienteHora(){
+        return this.siguienteHora;
+    }
+
     //metodo para calcular la cantidad total de tomas
 
     public void calcularTotalTomas(int dias){
         this.totalTomas = this.vecesAlDia * dias;
-        this.tomas = totalTomas;
+        this.tomas = totalTomas -1 ;
     }
 
     //horas que pasan entre toma y toma
@@ -73,10 +108,10 @@ public class Medicamento extends BroadcastReceiver{
         this.tomas--;
     }
 
-    public long calcularSiguienteToma(){
+    public void calcularSiguienteToma(){
         long ahora = System.currentTimeMillis();
-        long siguiente = ahora + (calcularHoras() * 3600000);
-        return siguiente;
+        long siguiente = ahora + (calcularHoras() * 60 * 60 * 1000);
+        this.siguienteHora = siguiente;
     }
 
     public void añadirAlarma(long siguienteHora, Context c){
@@ -91,6 +126,18 @@ public class Medicamento extends BroadcastReceiver{
         realizarToma();
         Toast.makeText(context,"quedan " + this.tomas, Toast.LENGTH_LONG).show();
         //REalizar el metodo para la siguiente alarma
+    }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.nMedicamento);
+        dest.writeInt(this.tomas);
+        dest.writeInt(this.totalTomas);
+        dest.writeLong(this.siguienteHora);
     }
 }

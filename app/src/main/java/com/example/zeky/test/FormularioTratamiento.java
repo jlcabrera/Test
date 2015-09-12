@@ -165,9 +165,10 @@ public class FormularioTratamiento extends ActionBarActivity {
                         if(comprobarDatosMedicamento(nombreMedicament, cantidad, vecesAlDia)) {
                             m.setnMedicamento(nombreMedicament.getText().toString());
                             m.setMiligramos(Integer.valueOf(cantidad.getText().toString()));
-                            m.setTomas(Integer.valueOf(vecesAlDia.getText().toString()));
+                            m.setVecesAlDia(Integer.valueOf(vecesAlDia.getText().toString()));
                             if(comprobarDatosFormulario()){
                                 m.calcularTotalTomas(obtenerDias());
+                                m.calcularSiguienteToma();
                             }
 
                             Toast.makeText(contexto, "Se ha creado un medicamento", Toast.LENGTH_LONG).show();
